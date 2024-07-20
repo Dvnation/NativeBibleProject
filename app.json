@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "AfreshTwo",
+    "slug": "AfreshTwo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.dvnationrex.AfreshTwo"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17da67c1-32f1-4ec6-a561-83f58c0ee973"
+      }
+    },
+    "plugins": [
+      [
+      "expo-build-properties",
+      {
+        "android":{
+          "enableProguardInReleaseBuilds": true
+        }
+      }
+    ]
+  ]}
+}
