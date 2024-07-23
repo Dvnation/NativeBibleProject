@@ -52,12 +52,14 @@ const {numbers} = route.params
   const [start, setstart] = useState();
   const [net, setnet] = useState([]);
   const [together, settog] = useState([]);
+  const [chaptering,setchaptering] = useState(chapter)
 
   useEffect(() => {
     setreg2(true);
   }, []);
 
   const auto = () => {
+
     content.splice(0, content.length);
     together.splice(0, together.length);
 
@@ -172,39 +174,46 @@ const {numbers} = route.params
   };
 
 
-  const onGestureEvent = (event)=>{
-    const {translation,velocity,direction} = event.nativeEvent
-    if(direction=== "right"){
-      setswipe("right")
-      console.log("right");
-    }
-    else if(direction ==="left"){
-setswipe("left")
-console.log("left");
-    }
-  }
+//   const onGestureEvent = (event)=>{
+//     const {translation,velocity,direction} = event.nativeEvent
+//     if(direction=== "right"){
+//       setswipe("right")
+//       console.log("right");
+//     }
+//     else if(direction ==="left"){
+// setswipe("left")
+// console.log("left");
+//     }
+//   }
 
   
 
   
-const handleLeft = ()=>{
-  console.log("left");
 
- 
-if(   parseInt(chapter)-parseInt(1)> 0){
-  navigation.navigate('TextPage', {name : name, numbers:numbers ,verseOutline: verseOutline, chapters: parseInt(chapter)-parseInt(1), verseOfScripture: verseOfScripture})
- 
- }
+
+  
+  const rightnav = ()=>{
+
+if(chaptering < numbers.length){
+  setchaptering(parseInt(chaptering)+1)
+
+  navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: chaptering, verseOfScripture: 1})
+
 }
 
-const handleRight = ()=>{
-  console.log(numbers.length);
-  if(parseInt(chapter)+parseInt(1) < numbers.length +1    ){
-   navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chapter)+parseInt(1), verseOfScripture: verseOfScripture})
-  
-  }}
-  
+  }
 
+  const leftnav = ()=>{
+   
+    if(chaptering < numbers.length && chaptering-1>0){
+      setchaptering(parseInt(chaptering)-1)
+
+      navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: chaptering, verseOfScripture: 1})
+  
+    }
+   
+
+  }
   return (
     <>
       {reg2 && auto()}
@@ -222,12 +231,12 @@ const handleRight = ()=>{
             borderBottomWidth: 1,
           }} 
          onPress={()=>{navigation.navigate('Home')}}  >
-          {name} {chapter}
+          {name} {chaptering}
         </Text>
       </View >
       <ScrollView ref={ScrollViewer} style={{flex: 1, marginTop: 0}}>
 
-<SwipeGesture onSwipeLeft={handleLeft} onSwipeRight={handleRight}>
+{/* <SwipeGesture onSwipeLeft={handleLeft} onSwipeRight={handleRight}> */}
 
         <View  style={{}}>
           {reg2 &&
@@ -236,12 +245,21 @@ const handleRight = ()=>{
             })}
         </View>
 
-        </SwipeGesture>
+        {/* </SwipeGesture> */}
+
         </ScrollView>
 
 
-    
-    </>
+<View  style={{ flexDirection:"row", justifyContent:"space-between",opacity:0.8, backgroundColor:"aquamarine",borderBottomWidth:0.03,borderColor:"red"}}>
+
+{/* <Button  title="left" onPress={leftnav}></Button>
+<Button title="right" onPress={rightnav}></Button> */}
+<Pressable onPress ={leftnav} style={{ width:"35%"}}><Text style={{ padding:6,fontSize:20,textAlign:"right"}}>{"<<<<"}</Text></Pressable>   
+<Pressable onPress={rightnav} style={{width:"35%"}}><Text style={{padding:6,fontSize:20,textAlign:"left"}}>{">>>>"}</Text></Pressable>   
+
+</View>
+
+ </>
   );
 }
 

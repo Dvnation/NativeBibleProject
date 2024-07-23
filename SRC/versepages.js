@@ -102,7 +102,6 @@ export function Verses({route, navigation}){
 
 
     const textPress=(item)=>{
-console.log(numbers);
       setverse(item)
       // console.log(item);
 
@@ -136,7 +135,7 @@ console.log(numbers);
 <View style={styles.containerHeader}>
         <Text style={styles.font} onPress={bookClick}>BOOKS</Text>
         <Text style={styles.font} onPress={Chapterclick}>CHAPTER</Text>
-        <Text style={styles.font}>VERSE</Text>
+        <Text style={styles.verse}>VERSE</Text>
       </View>
 
 
@@ -174,16 +173,21 @@ const styles = StyleSheet.create({
       // borderColor: "black",
       justifyContent: "space-around",
       marginBottom:6,
-      backgroundColor:"darksalmon",
+      backgroundColor:"chocolate",
       paddingVertical:6,
       elevation:5
+    },
+
+    verse:{
+fontSize:20,
+textDecorationLine:"underline"
     },
   
     list: {
       color: "black",
       // alignItems:"flex-start"
       // borderWidth: 5,
-      backgroundColor: "darksalmon",
+      backgroundColor: "chocolate",
       margin: 5,
       paddingVertical: 5,
       paddingLeft:4,

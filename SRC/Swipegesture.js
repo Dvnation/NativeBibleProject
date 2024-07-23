@@ -6,20 +6,20 @@ import { PanGestureHandler } from "react-native-gesture-handler";
 export const SwipeGesture = ({onSwipeLeft,onSwipeRight,children})=>{
 
     const PanGestureHandlers =(event)=>{
-        if(event.nativeEvent.translationX > 100){
+        if(event.nativeEvent.translationX > 20){
 
-            onSwipeRight && onSwipeLeft()
+            onSwipeLeft
 
         }
-        else if(event.nativeEvent.translationX < -100){
-            onSwipeLeft && onSwipeRight()
+        else if(event.nativeEvent.translationX < -20){
+          onSwipeRight()
         }
     }
 
     
 
     return(
-       <PanGestureHandler onGestureEvent={PanGestureHandlers} activeOffsetX={[-30,30]} failOffsetY={[-5,5]} >
+       <PanGestureHandler onGestureEvent={PanGestureHandlers} activeOffsetX={[-90,90]} failOffsetY={[-50,50]} >
 <View style={{flex:1}}>
 
     {children}

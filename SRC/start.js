@@ -43,7 +43,7 @@ export function Start({navigation}) {
 
   const [chapterNumbers, setChapterNumber] = useState([]);
 
-  const [img, setimg] = useState("Genesis")
+  let [img, setimg] = useState()
 
   useEffect(() => {
 
@@ -53,10 +53,7 @@ export function Start({navigation}) {
     let data = require("../JSON/kjv.json");
     setKjv([...getKjv,data]);
   }, []);
-  useEffect(()=>{
-    setgoToVerse(false)
-
-  },[])
+ 
 
   useEffect(() => {
     active();
@@ -72,9 +69,14 @@ export function Start({navigation}) {
       });
     });
   
-  
+
   }, [NABstate]);
+
+useEffect(()=>{
+
+},[])
   const active = () => {
+
     setReg(true);
     NABstate.map(item => {
       let XMLBIBLE = item.XMLBIBLE;
@@ -93,12 +95,16 @@ export function Start({navigation}) {
   };
 
   const EnterChapter = name => {
+// console.log("ioio");
+
     setimg(name);
     SetReg2(true);
     setReg4(true)
     // setgoToVerse(false)
+
     chapterNumbers.splice(0, chapterNumbers.length);
-   
+
+    
     NABstate.map(item => {
       let XMLBIBLE = item.XMLBIBLE;
 
@@ -106,21 +112,23 @@ export function Start({navigation}) {
         let bibleName = item.BIBLENAME;
         let BIBLEBOOK = item.BIBLEBOOK;
 
-        if (bibleName == "Genesis") {
-          //   console.log(name);
+        
+            // console.log(name);
           // setChapterNumber([])
-
+if(  bibleName == name){
           for (let i = 0; i < BIBLEBOOK.length; i++) {
             const element = BIBLEBOOK[i].CHAPTERNUMBER;
-            // console.log(element);
-            // chapterNumbers.splice(0,chapterNumbers.length)
+           
             chapterNumbers.push(element);
          
-          }
+          
         }
+
+}
+      
       });
-    });
-    navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:"Genesis"})
+    })
+      navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:name})
 
   };
 
@@ -129,7 +137,6 @@ export function Start({navigation}) {
 
     setReg3(true);
 
-    // console.log(searches);
     sdisplay.splice(0, sdisplay.length);
 
   
@@ -188,14 +195,10 @@ search2.filter(item=>{
 
   };
 
-  const Chapterclick = ()=>{
-    navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:img})
-
-  }
+  
 
   const Verseclick =()=>{
-// if(chapterNumbers!==""){
-//   chapterNumbers.splice(0,chapterNumbers.length)
+  chapterNumbers.splice(0,chapterNumbers.length)
 
 // }
     if (AsyncStorage) {
@@ -203,6 +206,7 @@ AsyncStorage.getItem("versenumbering").then(
   (storedArray)=>{
 const vnums = JSON.parse(storedArray)
 setvnum(vnums)
+
   }
 ).catch(
   (error)=>{
@@ -226,8 +230,17 @@ setvoutline(outline)
 )
 
 AsyncStorage.getItem("number").then((item)=>{
-setVerseNumber(item)
+if(item == "undefined"){
+  // setVerseNumber(item)
+  // console.log(item);
+  console.log("e no de for item");
+}
+else{
+  setVerseNumber(item)
+}
 })
+
+
 
      
 
@@ -244,8 +257,8 @@ setVerseNumber(item)
         let bibleName = item.BIBLENAME;
         let BIBLEBOOK = item.BIBLEBOOK;
 
-        if (          bibleName == img
-        ) {
+        if (    img  == "undefined" || !img  ) {
+      bibleName == img
           for (let i = 0; i < BIBLEBOOK.length; i++) {
             const element = BIBLEBOOK[i].CHAPTERNUMBER;
            
@@ -253,38 +266,107 @@ setVerseNumber(item)
          
           }
         }
+        else if(img!=="undefined" || img) {
+          
+            bibleName == img
+            for (let i = 0; i < BIBLEBOOK.length; i++) {
+              const element = BIBLEBOOK[i].CHAPTERNUMBER;
+             
+              chapterNumbers.push(element);
+           
+
+          }
+        }
         
         
       });
     });
 
-    console.log(chapterNumbers +"=cnum");
-    console.log(voutline + "=voutline");
-    console.log(vnum+"=vnum");
+    // console.log(chapterNumbers +"=cnum");
+    // console.log(voutline + "=voutline");
+    // console.log(vnum+"=vnum");
    
-    if(!voutline || !vnum){
+    if(voutline == "undefined" || vnum == "undefined" || !versenumber || versenumber=="undefined"){
       setgoToVerse(false)
       navigation.navigate('Home')
 
   
     }
     
-  else{
+  else if(versenumber&&vnum&&voutline){
     setgoToVerse(true)
   }
   }
 
+  const ball = ()=>{
+    chapterNumbers.splice(0,chapterNumbers.length)
+
+
+    NABstate.map(item => {
+      let XMLBIBLE = item.XMLBIBLE;
+
+      XMLBIBLE.map(item => {
+        let bibleName = item.BIBLENAME;
+        let BIBLEBOOK = item.BIBLEBOOK;
+
+        if ( bibleName == "Genesis") {
+          //   console.log(name);
+          // setChapterNumber([])
+          for (let i = 0; i < BIBLEBOOK.length; i++) {
+            const element = BIBLEBOOK[i].CHAPTERNUMBER;
+           
+            chapterNumbers.push(element);
+         
+          }
+        }
+
+      
+      });
+    });
+      navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:"Genesis"})
+console.log("its");
+  }
+
+  const noball = ()=>{
+
+    NABstate.map(item => {
+      let XMLBIBLE = item.XMLBIBLE;
+
+      XMLBIBLE.map(item => {
+        let bibleName = item.BIBLENAME;
+        let BIBLEBOOK = item.BIBLEBOOK;
+
+        if ( bibleName == img) {
+          //   console.log(name);
+          // setChapterNumber([])
+          for (let i = 0; i < BIBLEBOOK.length; i++) {
+            const element = BIBLEBOOK[i].CHAPTERNUMBER;
+           
+            chapterNumbers.push(element);
+         
+          }
+        }
+
+      
+      });
+    });
+
+    console.log("notttt");
+
+      navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:img})
+
+  }
   
   return (
     <View  style={{flex:1, marginTop:10}}>
-      {/* {navigation.navigate('TextPage')} */}
-{goToVerse&&    navigation.navigate('VersePage', {numbers : chapterNumbers, name:img, verseOutline:voutline, versenumbering:vnum, chapters:versenumber }) } 
-{/* {navigation.navigate(Swipeable)}  */}
-
+   
       <View style={styles.container}>
-        <Text style={styles.font}>BOOKS</Text>
-        <Text style={styles.font} onPress={Chapterclick}>CHAPTER</Text>
-        <Text style={styles.font}onPress={Verseclick}>VERSE</Text>
+        <Text style={styles.bible}>BOOKS</Text>
+        {/* <Text style={styles.font} onPress={Chapterclick}>CHAPTER</Text> */}
+        <Text style={styles.font} onPress={()=>img?noball():ball()}>CHAPTER</Text>
+
+        <Text style={styles.font}>VERSE</Text>
+
       </View>
 
       <View style={{flexDirection: "row"}}>
@@ -343,7 +425,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: -6,
     marginBottom:6,
-    backgroundColor:"darksalmon",
+    backgroundColor:"burlywood",
     paddingVertical:6,
     elevation:5
   },
@@ -352,6 +434,15 @@ const styles = StyleSheet.create({
   font: {
     color: "black",
     fontWeight: "bold",
+    
+  },
+  
+  bible:{
+    color: "black",
+    fontWeight: "bold",
+    textDecorationLine:"underline",
+    fontSize:20
+
   },
   containerDiv: {
     borderWidth: 2,
@@ -373,7 +464,7 @@ const styles = StyleSheet.create({
     // alignItems:"flex-start"
     // borderWidth: 5,
     // fontFamily:"cursive",
-    backgroundColor: "darksalmon",
+    backgroundColor: "burlywood",
     margin: 5,
     paddingVertical: 5,
     paddingLeft:4,

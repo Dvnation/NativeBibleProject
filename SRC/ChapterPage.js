@@ -24,17 +24,21 @@ export function ChapterPage({ route,navigation}) {
   const [reg, setreg] = useState();
   const [storageOutline,setStorageOutline] = useState([]) 
   const [storageNumbering,setStorageNumbering] = useState([]) 
+  const [mounted, setmounted] = useState(false)
 
 
   let [verseOutline, setVerseOutline] = useState([]);
   let [numberss, setnumberss] = useState()
 let [versenumbering,setversenumbering ] = useState([])
-  useState(() => {
+  useEffect(() => {
     let NAB = require("../JSON/data.json");
 
     setNAB([...NABstate, NAB]);
-  }, [NABstate]);
-  let collect = []
+  }, []);
+
+  useEffect(()=>{
+setmounted(true)
+  },[])
 
   const textpress = (number) => {
     setreg(true);
@@ -95,7 +99,6 @@ console.log("error stpring", error);
     }
   )
 
-console.log(versenumbering+"ppp");
 AsyncStorage.setItem(
   'versenumbering', JSON.stringify(versenumbering)).then(
     ()=>{
@@ -141,22 +144,29 @@ AsyncStorage.setItem('number', number)
     </View>
       <View style={styles.containerHeader}>
         <Text style={styles.font} onPress={bookClick}>BOOKS</Text>
-        <Text style={styles.font}>CHAPTER</Text>
+        <Text style={styles.chapter}>CHAPTER</Text>
         <Text style={styles.font} onPress={Verseclick}>VERSE</Text>
       </View>
     
 
-      <ScrollView style={{marginTop:5, flex: 1, margin:10}}>
-        <View style={styles.container}>
-          {numbers.map((item,index) => {
-            return (
-              <Text key={index} onPress={() => textpress(item)} style={styles.list}>
-                {item}
-              </Text>
-            );
-          })}
-        </View>
-      </ScrollView>
+     
+     {
+      mounted && <ScrollView style={{marginTop:5, flex: 1, margin:10}}>
+      <View style={styles.container}>
+        {numbers.map((item,index) => {
+          return (
+           <>
+            <Text key={index} onPress={() => textpress(item)} style={styles.list}>
+              {item}
+              
+            </Text>
+           </>
+          );
+        })}
+      </View>
+    </ScrollView>
+     }
+     
 
     </>
   );
@@ -179,6 +189,11 @@ const styles = StyleSheet.create({
     backgroundColor:"darksalmon",
     paddingVertical:6,
     elevation:5
+  },
+
+  chapter:{
+textDecorationLine:"underline",
+fontSize:20
   },
 
   list: {
