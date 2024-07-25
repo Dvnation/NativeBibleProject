@@ -105,6 +105,11 @@ export function Verses({route, navigation}){
       setverse(item)
       // console.log(item);
 
+
+      console.log(numbers);
+      console.log(verseOutline);
+      console.log(chapters);
+
       navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,verseOfScripture:item,verseOutline:verseOutline})
 
     }

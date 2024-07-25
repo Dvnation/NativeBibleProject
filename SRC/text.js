@@ -48,11 +48,10 @@ const {numbers} = route.params
 
   const [reg2, setreg2] = useState(false);
   const [content, setcontent] = useState([]);
-  const [heighten, setheight] = useState();
-  const [start, setstart] = useState();
   const [net, setnet] = useState([]);
   const [together, settog] = useState([]);
   const [chaptering,setchaptering] = useState(chapter)
+  const [searches,setseatch2] = useState("man")
 
   useEffect(() => {
     setreg2(true);
@@ -197,7 +196,7 @@ const {numbers} = route.params
 if(chaptering < numbers.length){
   setchaptering(parseInt(chaptering)+1)
 
-  navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: chaptering, verseOfScripture: 1})
+  navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chaptering)+1, verseOfScripture: 1})
 
 }
 
@@ -208,7 +207,7 @@ if(chaptering < numbers.length){
     if(chaptering < numbers.length && chaptering-1>0){
       setchaptering(parseInt(chaptering)-1)
 
-      navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: chaptering, verseOfScripture: 1})
+      navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chaptering)-1 , verseOfScripture: 1})
   
     }
    

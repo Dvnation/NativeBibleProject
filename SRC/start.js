@@ -2,6 +2,7 @@
 import {useEffect, useRef, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Swipeable } from "react-native-gesture-handler";
+import { Search } from "./search";
 // import { PanResponder } from "react-native";
 
 
@@ -132,68 +133,14 @@ if(  bibleName == name){
 
   };
 
-  const searching = () => {
-    // setsearh(query)
-
-    setReg3(true);
-
-    sdisplay.splice(0, sdisplay.length);
-
-  
-
-search2.filter(item=>{
-  if (item && item.text.toLowerCase().includes(searches.toLowerCase())) {
-    sdisplay.push({"verse":item.text, "bibleBook": item.book_name, "chapterNumber": item.chapter, "versenumber":item.verse, "version":"[KJV]"})
-
-  }
-  
-})
 
 
-    NABstate.map(item => {
-      let XMLBIBLE = item.XMLBIBLE;
+const searching = ()=>{
+// Search()
+  navigation.navigate('SearchPage', {searches:searches})
+}
 
-      XMLBIBLE.map(item => {
-        let bibleBook = item.BIBLENAME;
-        let BIBLEBOOK = item.BIBLEBOOK;
 
-        if (searches) {
-          for (let i = 0; i < BIBLEBOOK.length; i++) {
-            let mmm = BIBLEBOOK[i].CHAPTER;
-            let chapterNumber = BIBLEBOOK[i].CHAPTERNUMBER
-            mmm.filter(item => {
-              // console.log(item.VERSE);
-              let verse = item.VERSE
-              let versenumber = item.VERSENUMBER
-              if (
-                verse &&
-                verse.toLowerCase().includes(
-                  searches.toLowerCase() 
-                )
-              ) {
-                // console.log(verse+"is for nab");
-                sdisplay.push({"verse":verse, "bibleBook": bibleBook,"chapterNumber": chapterNumber, "versenumber":versenumber, "version":"[NAB]"})
- }
-
- navigation.navigate('SearchPage', {sdisplay: sdisplay, searches:searches, bibleBook:bibleBook, number:versenumber})
-
-  
-            });
-          }
-        }
-        else if(!searches){
-
-          sdisplay.splice(0, sdisplay.length);
-          setdisplay(["No search found"])
-         
-
-        }
-
-       
-      });
-    });
-
-  };
 
   
 
@@ -328,6 +275,7 @@ console.log("its");
   }
 
   const noball = ()=>{
+    chapterNumbers.splice(0,chapterNumbers.length)
 
     NABstate.map(item => {
       let XMLBIBLE = item.XMLBIBLE;

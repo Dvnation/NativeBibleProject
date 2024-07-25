@@ -5,6 +5,7 @@ import { Textpage } from "./text";
 import { Start } from "./start";
 import { Verses } from "./versepages";
 import { ChapterPage } from "./ChapterPage";
+import { Search } from "./search";
 
 
 export function Kjv({route,navigation}) {
@@ -22,6 +23,7 @@ export function Kjv({route,navigation}) {
   const [ampScan, setampScan] = useState([])
   const [getAmp,setAmp]= useState([])
 
+
   useEffect(() => {
     let data = require("../JSON/kjv.json");
     setKjv([...getKjv,data]);
@@ -32,7 +34,10 @@ export function Kjv({route,navigation}) {
     let data3 = require("../JSON/realAmp.json")
     setAmp([...getAmp,data3])
 
+
   }, []);
+
+
 
   kjvScan.splice(0, kjvScan.length)
   netScan.splice(0,netScan.length)
@@ -108,9 +113,10 @@ if(names.BOOKNAME == name.toUpperCase()){
   navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,verseOfScripture:verseOfScripture,verseOutline:verseOutline})
  }  
  
+{
+}
+{/* <Start/> */}
 
-<Start/>
-  
   
              {/* <Textpage name={name} chapter={chapters} verses={verseOutline} kjvScan = {kjvScan} netScan = {netScan} ampScan={ampScan} verseOfScripture={verseOfScripture}/> */}
     </>
