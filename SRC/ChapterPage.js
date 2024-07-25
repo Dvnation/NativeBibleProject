@@ -125,7 +125,9 @@ AsyncStorage.setItem('number', number)
     navigation.navigate('Home')
   }
   const Verseclick =()=>{
-   
+
+    // console.log(numbers+"is this");
+
 
   }
 

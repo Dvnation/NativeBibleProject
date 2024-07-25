@@ -74,6 +74,7 @@ console.log("right");
                     <Stack.Screen   name="Home" component={Start} />
                     <Stack.Screen name="ChapterPage" component={ChapterPage} />
                     <Stack.Screen name="VersePage" component={Verses} />
+                    <Stack.Screen name="TextPage" component={Kjv} />
                     <Stack.Screen name="SearchPage" component={Search} />
                     <Stack.Screen name="ViewPage" component={Textpage} />
 

@@ -207,7 +207,7 @@ if(chaptering < numbers.length){
     if(chaptering < numbers.length && chaptering-1>0){
       setchaptering(parseInt(chaptering)-1)
 
-      navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chaptering)-1 , verseOfScripture: 1})
+      navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chaptering)-1 , verseOfScripture: 1, verses:verseOutline})
   
     }
    
