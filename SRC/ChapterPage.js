@@ -134,15 +134,7 @@ AsyncStorage.setItem('number', number)
   return (
     <>
     <View>
-      <Text style={{
-            fontSize: 22,
-            alignContent: "center",
-            backgroundColor: "white",
-            marginBottom: 1,
-            borderRightWidth: 1,
-            borderColor: "black",
-            borderBottomWidth: 5,
-          }}>{name}</Text>
+      
     </View>
       <View style={styles.containerHeader}>
         <Text style={styles.font} onPress={bookClick}>BOOKS</Text>
@@ -188,9 +180,10 @@ const styles = StyleSheet.create({
     // borderColor: "black",
     justifyContent: "space-around",
     marginBottom:6,
-    backgroundColor:"darksalmon",
+    backgroundColor:"burlywood",
     paddingVertical:6,
-    elevation:5
+    elevation:5,
+    marginTop:8
   },
 
   chapter:{
@@ -202,7 +195,7 @@ fontSize:20
     color: "black",
     // alignItems:"flex-start"
     // borderWidth: 5,
-    backgroundColor: "darksalmon",
+    backgroundColor: "burlywood",
     margin: 5,
     paddingVertical: 5,
     paddingLeft:4,

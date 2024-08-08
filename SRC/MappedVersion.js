@@ -22,7 +22,8 @@ export function Kjv({route,navigation}) {
   const [netScan, setnetScan] = useState([])
   const [ampScan, setampScan] = useState([])
   const [getAmp,setAmp]= useState([])
-
+  const [getMSG,setMSG] = useState([])
+  const [MSGscan,setMSGscan] = useState([])
 
   useEffect(() => {
     let data = require("../JSON/kjv.json");
@@ -35,6 +36,8 @@ export function Kjv({route,navigation}) {
     setAmp([...getAmp,data3])
 
 
+    let data4 = require("../JSON/AMP.json")
+    setMSG([...getMSG,data4])
   }, []);
 
 
@@ -42,6 +45,8 @@ export function Kjv({route,navigation}) {
   kjvScan.splice(0, kjvScan.length)
   netScan.splice(0,netScan.length)
   ampScan.splice(0,ampScan.length)
+  MSGscan.splice(0,MSGscan.length)
+
 
 
   getKjv.forEach(item => {
@@ -102,6 +107,32 @@ if(names.BOOKNAME == name.toUpperCase()){
     });
   })
 
+
+  getMSG.map(item => {
+    let XMLBIBLE = item.XMLBIBLE;
+
+    XMLBIBLE.map(item => {
+      let bibleBook = item.BIBLEBOOK;
+
+      for (let i = 0; i < bibleBook.length; i++) {
+        const verses = bibleBook[i].CHAPTER[chapters]
+        const names = bibleBook[i].CHAPTER[0]
+if(names.BOOKNAME == name.toUpperCase()){
+
+  // console.log(verses.VERS);
+  let textArrary = verses.VERS
+  textArrary.map(item=>{
+    MSGscan.push(item)
+
+  })
+
+} 
+      }
+    
+    });
+  })
+
+    
       
     
     
@@ -110,7 +141,7 @@ if(names.BOOKNAME == name.toUpperCase()){
   return (
     <>
 {
-  navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,verseOfScripture:verseOfScripture,verseOutline:verseOutline})
+  navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,MSGscan:MSGscan,verseOfScripture:verseOfScripture,verseOutline:verseOutline})
  }  
  
 {

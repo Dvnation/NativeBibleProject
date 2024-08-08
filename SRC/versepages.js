@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react"
+  import { useState,useEffect } from "react"
 import { View,ScrollView,Text,StyleSheet } from "react-native"
 
 
@@ -19,6 +19,8 @@ export function Verses({route, navigation}){
   const [netScan, setnetScan] = useState([])
   const [ampScan, setampScan] = useState([])
   const [getAmp,setAmp]= useState([])
+  const [getMSG,setMSG] = useState([])
+  const [MSGscan,setMSGscan] = useState([])
 
     useEffect(() => {
       let data = require("../JSON/kjv.json");
@@ -30,12 +32,16 @@ export function Verses({route, navigation}){
       let data3 = require("../JSON/realAmp.json")
       setAmp([...getAmp,data3])
   
-    }, []);
+
+      let data4 = require("../JSON/AMP.json")
+      setMSG([...getMSG,data4])
+      }, []);
 
 
     kjvScan.splice(0, kjvScan.length)
     netScan.splice(0,netScan.length)
     ampScan.splice(0,ampScan.length)
+    MSGscan.splice(0,MSGscan.length)
   
   
     getKjv.forEach(item => {
@@ -95,6 +101,31 @@ export function Verses({route, navigation}){
       
       });
     })
+
+
+    getMSG.map(item => {
+      let XMLBIBLE = item.XMLBIBLE;
+  
+      XMLBIBLE.map(item => {
+        let bibleBook = item.BIBLEBOOK;
+  
+        for (let i = 0; i < bibleBook.length; i++) {
+          const verses = bibleBook[i].CHAPTER[chapters]
+          const names = bibleBook[i].CHAPTER[0]
+  if(names.BOOKNAME == name.toUpperCase()){
+  
+    // console.log(verses.VERS);
+    let textArrary = verses.VERS
+    textArrary.map(item=>{
+      MSGscan.push(item)
+  
+    })
+  
+  } 
+        }
+      
+      });
+    })
   
         
 
@@ -110,7 +141,7 @@ export function Verses({route, navigation}){
       // console.log(verseOutline);
       // console.log(chapters);
 
-      navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,verseOfScripture:item,verseOutline:verseOutline})
+      navigation.navigate('ViewPage', {name:name,numbers:numbers,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,MSGscan:MSGscan,verseOfScripture:item,verseOutline:verseOutline})
 
     }
 
@@ -127,15 +158,7 @@ export function Verses({route, navigation}){
     return(
       <>
  <View>
-      <Text style={{
-            fontSize: 22,
-            alignContent: "center",
-            backgroundColor: "white",
-            marginBottom: 1,
-            borderRightWidth: 1,
-            borderColor: "black",
-            borderBottomWidth: 5,
-          }} onPress={ ()=>   navigation.navigate('Home') }>{name}{" "+ chapters}</Text>
+     
     </View>
 <View style={styles.containerHeader}>
         <Text style={styles.font} onPress={bookClick}>BOOKS</Text>
@@ -178,9 +201,10 @@ const styles = StyleSheet.create({
       // borderColor: "black",
       justifyContent: "space-around",
       marginBottom:6,
-      backgroundColor:"chocolate",
+      backgroundColor:"burlywood",
       paddingVertical:6,
-      elevation:5
+      elevation:5,
+      marginTop: 8
     },
 
     verse:{
@@ -192,7 +216,7 @@ textDecorationLine:"underline"
       color: "black",
       // alignItems:"flex-start"
       // borderWidth: 5,
-      backgroundColor: "chocolate",
+      backgroundColor: "burlywood",
       margin: 5,
       paddingVertical: 5,
       paddingLeft:4,

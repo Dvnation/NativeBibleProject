@@ -1,9 +1,10 @@
 // import CheckBox from "@react-native-community/checkbox";
 import {useEffect, useRef, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Swipeable } from "react-native-gesture-handler";
-import { Search } from "./search";
-// import { PanResponder } from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import SettingsScreen from "./settings";
+import HomeScreen from "./testing";
 
 
 const {
@@ -18,6 +19,8 @@ const {
   TextInput,
   PanResponder,
 } = require("react-native");
+const Drawer = createDrawerNavigator();
+
 
 export function Start({navigation}) {
   const [NABstate, setNAB] = useState([]);
@@ -130,6 +133,8 @@ if(  bibleName == name){
       });
     })
       navigation.navigate('ChapterPage', {numbers : chapterNumbers, name:name})
+      // navigation.navigate('The Complete Bible', {backgroundColor:"green"})
+
 
   };
 
@@ -306,8 +311,11 @@ console.log("its");
   }
   
   return (
-    <View  style={{flex:1, marginTop:10}}>
    
+
+    <View  style={{flex:1, marginTop:10}}>
+{ navigation.navigate('The Complete Bible', {backgroundColor:"antiquewhite"})
+}   
       <View style={styles.container}>
         <Text style={styles.bible}>BOOKS</Text>
         {/* <Text style={styles.font} onPress={Chapterclick}>CHAPTER</Text> */}
@@ -371,7 +379,7 @@ const styles = StyleSheet.create({
     // borderWidth: 5,
     // borderColor: "black",
     justifyContent: "space-around",
-    marginTop: -6,
+    marginTop: -2,
     marginBottom:6,
     backgroundColor:"burlywood",
     paddingVertical:6,

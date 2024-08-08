@@ -1,18 +1,19 @@
-import {useEffect, useState} from "react";
+  import {useEffect, useState} from "react";
 import {Text, ScrollView, View, StyleSheet, Button} from "react-native";
 import { SearchPasser } from "./SearchPasser";
 
 
 
+
 export function Search({route, navigation}) {
-  const {sdisplay} = route.params;
-  const {bibleBook} = route.params;
+
+ 
   const {searches} = route.params;
-  const {number} = route.params;
-  const {numbers} = route.params;
+  
 
   const [kjv, setkjv] = useState([]);
   const [nab, setnab] = useState([]);
+  const [passer,setpasser] = useState(false)
 
   const [reg, setreg] = useState();
   const [reg2, setreg2] = useState(true);
@@ -34,11 +35,16 @@ export function Search({route, navigation}) {
 
     let data = require("../JSON/kjv.json");
     setKjv([...getKjv, data]);
+
+
+
+
   }, []);
+
+
 
   useEffect(() => {
     const temArr = [];
-    sdisplayer.splice(0, sdisplayer.length);
     getKjv.forEach(item => {
       let whole = item.verses;
       whole.forEach(verse => {
@@ -46,16 +52,19 @@ export function Search({route, navigation}) {
         let chapter = verse.chapter;
         let text = verse.text;
         if (bookname && chapter) {
-          // search2.push(verse)
           temArr.push(verse);
         }
 
       });
     });
     setseatch2(temArr);
-  }, [NABstate]);
 
-  // console.log(search2);
+
+  }, [getKjv]);
+
+
+sdisplayer.splice(0,sdisplayer.length)
+
 
   verseOutline.splice(0, verseOutline.length);
   NABstate.map(item => {
@@ -79,6 +88,60 @@ export function Search({route, navigation}) {
       }
     });
   });
+
+  NABstate.map(item => {
+    let XMLBIBLE = item.XMLBIBLE;
+
+    XMLBIBLE.map(item => {
+      let bibleBook = item.BIBLENAME;
+      let BIBLEBOOK = item.BIBLEBOOK;
+
+      if (searches) {
+        for (let i = 0; i < BIBLEBOOK.length; i++) {
+          let mmm = BIBLEBOOK[i].CHAPTER;
+          let chapterNumber = BIBLEBOOK[i].CHAPTERNUMBER;
+          mmm.filter(item => {
+            // console.log(item.VERSE);
+            let verse = item.VERSE;
+            let versenumber = item.VERSENUMBER;
+            if (
+              verse &&
+              verse.toLowerCase().includes(searches.toLowerCase())
+            ) {
+              sdisplayer.push({
+                verse: verse,
+                bibleBook: bibleBook,
+                chapterNumber: chapterNumber,
+                versenumber: versenumber,
+                version: "[NAB]",
+              });
+            }
+          });
+        }
+      }
+    });
+  })
+
+
+  
+      
+
+    search2.filter(item => {
+      if (
+        item &&
+        item.text.toLowerCase().includes(searches.toLowerCase())
+      ) {
+        sdisplayer.push({
+          verse: item.text,
+          bibleBook: item.book_name,
+          chapterNumber: item.chapter,
+          versenumber: item.verse,
+          version: "[KJV]",
+        });
+      }
+    })
+  
+
 
   const filterKjv = () => {
     // flow()
@@ -105,18 +168,16 @@ export function Search({route, navigation}) {
   };
 
   const check = item => {
+setpasser(true)
+
     setbname(item.bibleBook);
     setbchapter(item.chapterNumber);
     setbverse(item.versenumber);
 
-    console.log(item.bibleBook);
-    console.log(item.chapterNumber);
-    console.log(item.versenumber);
-    console.log(number);
-    console.log(numbers);
+  
+};
 
-       
-  };
+
 
 
 
@@ -135,60 +196,21 @@ export function Search({route, navigation}) {
   
   return (
     <>
-{bname &&  <SearchPasser navigation={navigation} name={bname} chapters={bchapter} verseOfScripture={bverse} verseOutline={verseOutline}  />
+
+   {passer == true &&  <SearchPasser navigation={navigation} name={bname} chapters={bchapter} verseOfScripture={bverse} verseOutline={verseOutline} numbers={9}  /> }
+
+
+{
+  setTimeout(() => {
+      {setpasser(false)} 
+
+  }, 500)
 }
+
   
-      {
+   
 
-        search2.filter(item => {
-          if (
-            item &&
-            item.text.toLowerCase().includes(searches.toLowerCase())
-          ) {
-            sdisplayer.push({
-              verse: item.text,
-              bibleBook: item.book_name,
-              chapterNumber: item.chapter,
-              versenumber: item.verse,
-              version: "[KJV]",
-            });
-          }
-        })
-      }
-
-      {NABstate.map(item => {
-        let XMLBIBLE = item.XMLBIBLE;
-
-        XMLBIBLE.map(item => {
-          let bibleBook = item.BIBLENAME;
-          let BIBLEBOOK = item.BIBLEBOOK;
-
-          if (searches) {
-            for (let i = 0; i < BIBLEBOOK.length; i++) {
-              let mmm = BIBLEBOOK[i].CHAPTER;
-              let chapterNumber = BIBLEBOOK[i].CHAPTERNUMBER;
-              mmm.filter(item => {
-                // console.log(item.VERSE);
-                let verse = item.VERSE;
-                let versenumber = item.VERSENUMBER;
-                if (
-                  verse &&
-                  verse.toLowerCase().includes(searches.toLowerCase())
-                ) {
-                  sdisplayer.push({
-                    verse: verse,
-                    bibleBook: bibleBook,
-                    chapterNumber: chapterNumber,
-                    versenumber: versenumber,
-                    version: "[NAB]",
-                  });
-                }
-              });
-            }
-          }
-        });
-      })}
-
+     
       <View>
         <Text
           style={{
@@ -260,13 +282,17 @@ export function Search({route, navigation}) {
             })}
 
           {reg2 &&
+
             sdisplayer.map((item, index) => {
               return (
                 <>
-                  {item.version == "[KJV]" && (
+                  {item && item.version == "[KJV]" && (
                     <Text
                       key={index}
-                      onPress={() => check(item)}
+                      onPress={()=> check(item) }
+
+                      
+              
                       style={styles.list1}
                     >
                       {item.bibleBook +
@@ -302,7 +328,9 @@ export function Search({route, navigation}) {
                   )}
                 </>
               );
-            })}
+            })
+            
+            }
         </View>
       </ScrollView>
 

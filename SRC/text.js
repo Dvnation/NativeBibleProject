@@ -1,4 +1,4 @@
-// import CheckBox from "@react-native-community/checkbox";
+  // import CheckBox from "@react-native-community/checkbox";
 import {
   Children,
   useEffect,
@@ -9,9 +9,10 @@ import {
 } from "react";
 import {List} from "./list";
 import {Kjv} from "./MappedVersion";
-import { PanResponder } from "react-native";
+import { PanResponder, TouchableHighlight } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { SwipeGesture } from "./Swipegesture";
+import { useNavigation } from "@react-navigation/native";
 
 
 const {
@@ -36,6 +37,8 @@ const {numbers} = route.params
   const {kjvScan} =route.params
   const {netScan} = route.params
   const {ampScan} = route.params
+  const {MSGscan} = route.params
+
   const {verseOfScripture} = route.params
   const {chapter} = route.params
   const {verseOutline}= route.params
@@ -49,37 +52,86 @@ const {numbers} = route.params
   const [reg2, setreg2] = useState(false);
   const [content, setcontent] = useState([]);
   const [net, setnet] = useState([]);
+  const [NAB, setNAB] = useState([]);
+
   const [together, settog] = useState([]);
   const [chaptering,setchaptering] = useState(chapter)
   const [searches,setseatch2] = useState("man")
+  const [NABscan,setNabScan] = useState([])
+  const [underline,setunderline ] = useState(false)
 
   useEffect(() => {
     setreg2(true);
   }, []);
 
+  const naval = useNavigation()
+  useEffect(()=>{
+const rem = navigation.addListener('beforeRemove',(e)=>{
+  navigation.navigate('The Complete Bible', {backgroundColor:"antiquewhite"})
+})
+return rem
+  },[naval])
+
+
+useEffect(()=>{
+  let data = require("../JSON/data.json");
+  setNAB([...NAB,data]);
+
+},[])
+
+
   const auto = () => {
 
+    
     content.splice(0, content.length);
     together.splice(0, together.length);
+    NABscan.splice(0,NABscan.length)
 
-    net.map(item => {
-      let whole = item.verses;
-      whole.map((verse, index) => {
-        let bookname = verse.book_name;
-        let chapter = verse.chapter;
-        let text = verse.text;
-        let versed = verse.verse;
+    // NAB.map(item => {
+    //   let whole = item.verses;
+    //   whole.map((verse, index) => {
+    //     let bookname = verse.book_name;
+    //     let chapter = verse.chapter;
+    //     let text = verse.text;
+    //     let versed = verse.verse;
 
-        if (bookname == name && chapter == 5) {
-          together.push(text);
+    //     if (bookname == name && chapter == chapter) {
+    //       together.push(text);
+          
+    //       // console.log(text+"for net");
+    //     }
+    //   });
+    // });
+
+
+
+    NAB.map(item => {
+      let XMLBIBLE = item.XMLBIBLE;
+
+      XMLBIBLE.map(item => {
+        let bibleName = item.BIBLENAME;
+        let bibleBook = item.BIBLEBOOK;
+
+     
+        if (bibleName == name) {
+          let Verse = bibleBook[parseInt(chaptering) - parseInt(1)].CHAPTER;
+
+          for (let i = 0; i < Math.max(Verse.length); i++) {
+           
+            if (Verse[i]) {
+              const versess = Verse[i].VERSE;
+              NABscan.push(versess)
+             
+            }
+          }
         }
-      });
-    });
+      })})
+
 
     for (
       let i = 0;
       i <
-      Math.max(kjvScan.length, verses.length, ampScan.length, netScan.length);
+      Math.max(kjvScan.length, NABscan.length, ampScan.length, netScan.length,MSGscan.length);
       i++
     ) {
       if (netScan[i]) {
@@ -101,6 +153,31 @@ const {numbers} = route.params
               style={{backgroundColor: "orange", paddingVertical: 3}}
             >
               {i + 1 + " " + netScan[i] + " " + "[NET]"}
+            </Text>
+          </View>
+        );
+      }
+
+      if (MSGscan[i]) {
+        content.push(
+          <View
+            id="NET"
+            style={{
+              borderWidth: 3,
+              borderBottomWidth: 0,
+              borderColor: "darkcyan",
+              backgroundColor: "black",
+              paddingBottom: 3,
+              paddingRight: 1.5,
+            }}
+           
+          >
+           
+            <Text
+              id={`play${i}`}
+              style={{backgroundColor: "blanchedalmond", paddingVertical: 3, textDecorationLine:underline?"underline":"none"}}
+            onPress={()=>handlePress(MSGscan[i])}>
+              {i + 1 + " " + MSGscan[i] + " " + "[MSG]"}
             </Text>
           </View>
         );
@@ -141,8 +218,10 @@ const {numbers} = route.params
             </Text>
           </View>
         );
+      }
+  
 
-        if (verses[i]) {
+        if (NABscan[i]) {
           content.push(
             <View
               style={{
@@ -150,19 +229,33 @@ const {numbers} = route.params
                 borderBottomWidth: 10,
                 borderColor: "darkcyan",
                 backgroundColor: "black",
-                paddingBottom: 3,
+                paddingBottom: 5,
                 paddingRight: 1.5,
               }}
             >
               <Text style={{backgroundColor: "aquamarine", paddingVertical: 3}}>
-                {i + 1 + " " + verses[i] + " " + "[NAB]"}
+                {i + 1 + " " + NABscan[i] + " " + "[NAB]"}
               </Text>
             </View>
           );
         }
       }
-    }
+    
   };
+
+  const handlePress = (val) =>{
+    if(underline == false){
+setunderline(true)
+    }
+    else{
+setunderline(false)
+    }
+    console.log(val);
+
+     <TouchableHighlight style={{backgroundColor:"red"}}>
+              <Text>{val}</Text>
+            </TouchableHighlight>
+  }
 
   const lays = (event, index) => {
     if (index == verseOfScripture - 1) {
@@ -192,7 +285,6 @@ const {numbers} = route.params
 
   
   const rightnav = ()=>{
-
 if(chaptering < numbers.length){
   setchaptering(parseInt(chaptering)+1)
 
@@ -203,8 +295,7 @@ if(chaptering < numbers.length){
   }
 
   const leftnav = ()=>{
-   
-    if(chaptering < numbers.length && chaptering-1>0){
+    if(chaptering -1 < numbers.length && chaptering-1>0){
       setchaptering(parseInt(chaptering)-1)
 
       navigation.navigate('TextPage', {name : name, numbers:numbers,verseOutline: verseOutline, chapters: parseInt(chaptering)-1 , verseOfScripture: 1, verses:verseOutline})
@@ -215,23 +306,12 @@ if(chaptering < numbers.length){
   }
   return (
     <>
+    { navigation.navigate('The Complete Bible', {backgroundColor:"aquamarine"})
+  }   
       {reg2 && auto()}
       
       <View  style={{borderColor: "white", borderWidth: 3}}  >
-        <Text
-          id="name"
-          style={{
-            fontSize: 22,
-            alignContent: "center",
-            backgroundColor: "aquamarine",
-            marginBottom: 1,
-            borderRightWidth: 1,
-            borderColor: "black",
-            borderBottomWidth: 1,
-          }} 
-         onPress={()=>{navigation.navigate('Home')}}  >
-          {name} {chaptering}
-        </Text>
+        
       </View >
       <ScrollView ref={ScrollViewer} style={{flex: 1, marginTop: 0}}>
 

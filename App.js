@@ -8,78 +8,88 @@ import { Verses } from './SRC/versepages';
 import { Kjv } from './SRC/MappedVersion';
 import { Search } from './SRC/search';
 import { Textpage } from './SRC/text';
-
+import * as Speech from 'expo-speech'
+import { SearchPasser } from './SRC/SearchPasser';
+import { AudioList } from './SRC/Favorite';
+import { Settings } from './SRC/Favorite';
+import { Devotionals } from './SRC/Favorite';
+import { Community } from './SRC/Favorite';
+import { About } from './SRC/Favorite';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import SettingsScreen from './SRC/settings';
+import { Favorite } from './SRC/Favorite';
 
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
 
 const App = () => {
     const [swpe,setswipe]= useState()
+    const [tex,settex]= useState("my name is honorable and bla bla")
 
-const Page1 = ()=>{
-    return<Text>Page1</Text>
-}
-
-const Page2 = ()=>{
-    return<Text>Page2</Text>
-}
-
-
-    const Swipeable = ({navigation})=>{
-        const panResponder = PanResponder.create({
-            onMoveShouldSetPanResponder:(evt,gestureState)=>true,
-            onPanResponderMove:(evt, gestureState)=>{
-                const {dx} = gestureState;
-                if(dx>100){
-                    setswipe("left")
-                }
-                else if(dx < -100){
-                    // navigation.navigate('Page1')
-setswipe("right")
-                }
-            },
-          onPanResponderRelease:()=>{
-            if(swpe == "left"){
-                navigation.navigate('Page2')
-
-                // console.log("swiped left");
-            }
-            else if(swpe == "right"){
-                navigation.navigate('Page1')
-
-console.log("right");
-            }
-          }
-
-        })
-
-        return(
-            <View {...panResponder.panHandlers}>
-<Text>Swipe to switch pageshihiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</Text>
-            </View>
-        )
+    const speaker=()=>{
+        Speech.speak(tex)
     }
+
+    const DrawerNavigation = ()=>{
+        return(
+            <Drawer.Navigator initialRouteName="Home">
+            
+            <Drawer.Screen name="The Complete Bible" component={StackNavigator} options={({route})=>({
+                    cardStyle : {backgroundColor:"blue"}, headerStyle:{backgroundColor:route.params?.backgroundColor || "antiquewhite"}
+                })} />
+
+                <Drawer.Screen name='Favorites' component={Favorite}/>
+                <Drawer.Screen name='Audio List' component={AudioList}/>
+                <Drawer.Screen name='Settings' component={Settings}/>
+                <Drawer.Screen name='Devotionals' component={Devotionals}/>
+                <Drawer.Screen name='Join a community' component={Community}/>
+                <Drawer.Screen name='About' component={About}/>
+
+
+
+          </Drawer.Navigator>
+
+
+        )
+    }  
+
+const StackNavigator =()=>{
+    return(
+        <Stack.Navigator initialRouteName="Home">
+       
+            <Stack.Screen   name="Home" component={Start} options={{ title:" ",
+                cardStyle : {backgroundColor:"ivory"}, headerStyle:{backgroundColor:"antiquewhite", height:30}
+            }} />
+            <Stack.Screen name="ChapterPage" component={ChapterPage} options={({route})=>({ title:route.params?.name.toUpperCase()|| 'moon',
+                cardStyle : {backgroundColor:"ivory"}, headerStyle:{backgroundColor:"antiquewhite"}, headerTitleStyle:{fontSize:15}
+            } )} />
+            <Stack.Screen name="VersePage" component={Verses} options={({route})=>({ title:route.params?.name.toUpperCase() + " "+  route.params?.chapters|| 'moon',
+                cardStyle : {backgroundColor:"ivory"}, headerStyle:{backgroundColor:"antiquewhite"}, headerTitleStyle:{fontSize:15}
+            } )} />
+            <Stack.Screen name="TextPage" component={Kjv} />
+            <Stack.Screen name="ViewPage" component={Textpage} options={({route})=>({ title:route.params?.name.toUpperCase() + " "+  route.params?.chapter|| 'moon',
+                cardStyle : {backgroundColor:"ivory"}, headerStyle:{backgroundColor:"aquamarine"}, headerTitleStyle:{fontSize:15}
+            } )}/>
+            <Stack.Screen name="SearchPasser" component={SearchPasser} />
+            <Stack.Screen name="SearchPage" component={Search} />
+
+
+        </Stack.Navigator>
+    )
+}
+
+
+    
    
     return (
         <>
-
-        
-           
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="Home">
-                <Stack.Screen   name="Page1" component={Page1} />
-                <Stack.Screen   name="Page2" component={Page2} />
-                <Stack.Screen   name="Swipeable" component={Swipeable} />
-
-                    <Stack.Screen   name="Home" component={Start} />
-                    <Stack.Screen name="ChapterPage" component={ChapterPage} />
-                    <Stack.Screen name="VersePage" component={Verses} />
-                    <Stack.Screen name="TextPage" component={Kjv} />
-                    <Stack.Screen name="SearchPage" component={Search} />
-                    <Stack.Screen name="ViewPage" component={Textpage} />
-
-                </Stack.Navigator>
-            </NavigationContainer>
+<NavigationContainer>
+<DrawerNavigation/>
+</NavigationContainer>
+ 
+            
         </>
     );
 };

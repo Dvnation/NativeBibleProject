@@ -19,9 +19,10 @@ export function SearchPasser({name,chapters,verseOutline,verseOfScripture,naviga
     const [ampScan, setampScan] = useState([])
     const [getAmp,setAmp]= useState([])
     const [chapterLength,setChapterLength] = useState([])
+    const [getMSG,setMSG] = useState([])
+    const [MSGscan,setMSGscan] = useState([])
 
-
-
+// const {name} = route.params
 
 
 
@@ -35,7 +36,8 @@ export function SearchPasser({name,chapters,verseOutline,verseOfScripture,naviga
         let data3 = require("../JSON/realAmp.json")
         setAmp([...getAmp,data3])
     
-    
+        let data4 = require("../JSON/AMP.json")
+        setMSG([...getMSG,data4])
       }, []);
     
     
@@ -84,6 +86,29 @@ export function SearchPasser({name,chapters,verseOutline,verseOfScripture,naviga
           }
         });
       });
+
+      getMSG.map(item => {
+        let XMLBIBLE = item.XMLBIBLE;
+    
+        XMLBIBLE.map(item => {
+          let bibleBook = item.BIBLEBOOK;
+    
+          for (let i = 0; i < bibleBook.length; i++) {
+            const verses = bibleBook[i].CHAPTER[chapters]
+            const names = bibleBook[i].CHAPTER[0]
+    if(names.BOOKNAME == name.toUpperCase()){
+    
+      let textArrary = verses.VERS
+      textArrary.map(item=>{
+        MSGscan.push(item)
+    
+      })
+    
+    } 
+          }
+        
+        });
+      })
     
     
       getAmp.map(item => {
@@ -117,8 +142,8 @@ export function SearchPasser({name,chapters,verseOutline,verseOfScripture,naviga
 
     return(
         <>
-       {
-  navigation.navigate('ViewPage', {name:name,numbers:0,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,netScan:netScan,ampScan:ampScan,verseOfScripture:verseOfScripture,verseOutline:verseOutline})
+      {
+  navigation.navigate('ViewPage', {name:name,numbers:99,chapter:chapters,verses:verseOutline,kjvScan:kjvScan,MSGscan:MSGscan,netScan:netScan,ampScan:ampScan,verseOfScripture:verseOfScripture,verseOutline:verseOutline})
  }  
  
         
