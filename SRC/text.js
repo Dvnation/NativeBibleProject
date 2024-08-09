@@ -7,12 +7,9 @@ import {
   UIManager,
   findNodeHandle,
 } from "react";
-import {List} from "./list";
-import {Kjv} from "./MappedVersion";
-import { PanResponder, TouchableHighlight } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
-import { SwipeGesture } from "./Swipegesture";
+import { PanResponder, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import * as Clipboard from 'expo-clipboard'
 
 
 const {
@@ -22,7 +19,6 @@ const {
   Text,
   FlatList,
   Button,
-  Pressable,
   Alert,
   ScrollView,
   useWindowDimensions,
@@ -48,6 +44,7 @@ const {numbers} = route.params
   const ScrollViewers = useRef();
   const [swpe,setswipe]= useState()
 
+  const [copied,setcopied] = useState([name+ " "+ chapter])
 
   const [reg2, setreg2] = useState(false);
   const [content, setcontent] = useState([]);
@@ -58,7 +55,20 @@ const {numbers} = route.params
   const [chaptering,setchaptering] = useState(chapter)
   const [searches,setseatch2] = useState("man")
   const [NABscan,setNabScan] = useState([])
-  const [underline,setunderline ] = useState(false)
+  const [underlineKjv,setunderlineKjv ] = useState("none")
+  const [underlineMsg,setunderlineMsg ] = useState("none")
+  const [underlineAmp,setunderlineAmp ] = useState("none")
+  const [underlineNab,setunderlineNab ] = useState("none")
+  const [underline,setunderline ] = useState("none")
+
+
+
+  const [highlight,setHighlight]= useState([])
+  const [highlightKjv,setHighlightKjv]= useState([])
+  const [highlightNab,setHighlightNab]= useState([])
+  const [highlightAmp,setHighlightAmp]= useState([])
+  const [highlightMsg,setHighlightMsg]= useState([])
+
 
   useEffect(() => {
     setreg2(true);
@@ -148,12 +158,14 @@ useEffect(()=>{
             }}
             onLayout={event => lays(event, i)}
           >
-            <Text
+           <Pressable key={i} onPress={()=>handlePressNet(netScan[i],i)} >
+           <Text
               id={`play${i}`}
-              style={{backgroundColor: "orange", paddingVertical: 3}}
+              style={{textDecorationLine:highlight.includes(i)  ? underline: "nones", backgroundColor:"orange", paddingVertical: 3}}
             >
               {i + 1 + " " + netScan[i] + " " + "[NET]"}
             </Text>
+           </Pressable>
           </View>
         );
       }
@@ -172,13 +184,15 @@ useEffect(()=>{
             }}
            
           >
-           
-            <Text
+             <Pressable key={i} onPress={()=>handlePressMsg(MSGscan[i],i)} >
+           <Text
               id={`play${i}`}
-              style={{backgroundColor: "blanchedalmond", paddingVertical: 3, textDecorationLine:underline?"underline":"none"}}
-            onPress={()=>handlePress(MSGscan[i])}>
+              style={{textDecorationLine:highlightMsg.includes(i)  ? underlineMsg: "nones",backgroundColor: "blanchedalmond", paddingVertical: 3}}
+            >
               {i + 1 + " " + MSGscan[i] + " " + "[MSG]"}
             </Text>
+           </Pressable>
+           
           </View>
         );
       }
@@ -195,9 +209,15 @@ useEffect(()=>{
               paddingRight: 1.5,
             }}
           >
-            <Text style={{backgroundColor: "pink", paddingVertical: 3}}>
+              <Pressable key={i} onPress={()=>handlePressKjv(kjvScan[i],i)} >
+           <Text
+              id={`play${i}`}
+              style={{textDecorationLine:highlightKjv.includes(i)  ? underlineKjv: "nones", backgroundColor:"pink", paddingVertical: 3}}
+            >
               {i + 1 + " " + kjvScan[i] + " " + "[KJV]"}
             </Text>
+           </Pressable>
+          
           </View>
         );
       }
@@ -213,9 +233,15 @@ useEffect(()=>{
               paddingRight: 1.5,
             }}
           >
-            <Text style={{backgroundColor: "yellow", paddingVertical: 3}}>
+              <Pressable key={i}   onPress={()=>handlePressAmp(ampScan[i],i)} >
+           <Text
+              id={`play${i}`}
+              style={{textDecorationLine:highlightAmp.includes(i)  ? underlineAmp: "nones", backgroundColor:"yellow", paddingVertical: 3}}
+            >
               {i + 1 + " " + ampScan[i] + " " + "[AMP]"}
             </Text>
+           </Pressable>
+           
           </View>
         );
       }
@@ -233,9 +259,15 @@ useEffect(()=>{
                 paddingRight: 1.5,
               }}
             >
-              <Text style={{backgroundColor: "aquamarine", paddingVertical: 3}}>
-                {i + 1 + " " + NABscan[i] + " " + "[NAB]"}
-              </Text>
+                <Pressable delay key={i} onPress={()=>handlePressNab(NABscan[i],i)} >
+           <Text
+              id={`play${i}`}
+              style={{textDecorationLine:highlightNab.includes(i)  ? underlineNab: "nones", backgroundColor:"aquamarine", paddingVertical: 3}}
+            >
+              {i + 1 + " " + NABscan[i] + " " + "[NAB]"}
+            </Text>
+           </Pressable>
+           
             </View>
           );
         }
@@ -243,18 +275,186 @@ useEffect(()=>{
     
   };
 
-  const handlePress = (val) =>{
-    if(underline == false){
-setunderline(true)
-    }
-    else{
-setunderline(false)
-    }
-    console.log(val);
+  const handlePressMsg = (val,verse) =>{
+    // console.log(val);
 
-     <TouchableHighlight style={{backgroundColor:"red"}}>
-              <Text>{val}</Text>
-            </TouchableHighlight>
+
+    if(highlightMsg.includes(verse)){
+      // alert("yes")
+      setunderlineMsg("none")
+      let man = highlightMsg.filter(item=>item!==verse)
+      setHighlightMsg(man)
+      
+      let remove = copied.filter(item=>item!==verse)
+      setcopied(remove)
+      let remove2 = copied.filter(item=>item!==val)
+      setcopied(remove2)
+      }
+      
+        if(!highlightMsg.includes(verse)){
+      
+        // alert("no")
+      
+        setHighlightMsg([...highlightMsg,verse])
+      
+      setunderlineMsg("underline")
+      copied.push(val+ " "+`[${verse+1}] [MSG]`)
+      
+      
+      }
+
+      // await Clipboard.setStringAsync(val)
+      // Alert.alert('copied', val)
+
+   
+  }
+  const handlePressAmp = (val,verse) =>{
+    // console.log(val);
+
+
+    if(highlightAmp.includes(verse)){
+      // alert("yes")
+      setunderlineAmp("none")
+      let man = highlight.filter(item=>item!==verse)
+      setHighlightAmp(man)
+      console.log(highlightAmp+"he");
+      
+      let remove = copied.filter(item=>item!==verse)
+      setcopied(remove)
+      let remove2 = copied.filter(item=>item!==val)
+      setcopied(remove2)
+      }
+      
+        if(!highlightAmp.includes(verse)){
+      
+        // alert("no")
+      
+        setHighlightAmp([...highlightAmp,verse])
+      
+      setunderlineAmp("underline")
+      copied.push(val+ " "+`[${verse+1}] [AMP]`)
+      
+      
+      }
+
+      // await Clipboard.setStringAsync(val)
+      // Alert.alert('copied', val)
+
+   
+  }
+  const handlePressKjv = (val,verse) =>{
+    // console.log(val);
+
+
+    if(highlightKjv.includes(verse)){
+      // alert("yes")
+      setunderlineKjv("none")
+      let man = highlightKjv.filter(item=>item!==verse)
+      setHighlightKjv(man)
+      console.log(highlightKjv+"he");
+      
+      let remove = copied.filter(item=>item!==verse)
+      setcopied(remove)
+      let remove2 = copied.filter(item=>item!==val)
+      setcopied(remove2)
+      }
+      
+        if(!highlightKjv.includes(verse)){
+      
+        // alert("no")
+      
+        setHighlightKjv([...highlightKjv,verse])
+      
+      setunderlineKjv("underline")
+      copied.push(val+ " "+`[${verse+1}] [KJV]`)
+      
+      
+      }
+
+      // await Clipboard.setStringAsync(val)
+      // Alert.alert('copied', val)
+
+   
+  }
+  const handlePressNet = (val,verse) =>{
+    console.log(highlight+"she");
+console.log(verse);
+if(highlight.includes(verse)){
+// alert("yes")
+setunderline("none")
+let man = highlight.filter(item=>item!==verse)
+setHighlight(man)
+console.log(highlight+"he");
+
+let remove = copied.filter(item=>item!==verse)
+setcopied(remove)
+let remove2 = copied.filter(item=>item!==val)
+setcopied(remove2)
+}
+
+  if(!highlight.includes(verse)){
+
+  // alert("no")
+
+  setHighlight([...highlight,verse])
+
+setunderline("underline")
+copied.push(val+ " "+`[${verse+1}] [NET]`)
+
+
+}
+
+
+   
+  }
+  const handlePressNab = (val,verse) =>{
+    // console.log(val);
+
+
+    if(highlightNab.includes(verse)){
+      // alert("yes")
+      setunderlineNab("none")
+      let man = highlightNab.filter(item=>item!==verse)
+      setHighlightNab(man)
+      console.log(highlightNab+"he");
+      
+      let remove = copied.filter(item=>item!==verse)
+      setcopied(remove)
+      let remove2 = copied.filter(item=>item!==val)
+      setcopied(remove2)
+      }
+      
+        if(!highlightNab.includes(verse)){
+      
+        // alert("no")
+      
+        setHighlightNab([...highlightNab,verse])
+      
+      setunderlineNab("underline")
+      copied.push(val+ " "+`[${verse+1}] [NAB]`)
+      
+      
+      }
+
+      // await Clipboard.setStringAsync(val)
+      // Alert.alert('copied', val)
+
+   
+  }
+
+  const copy =async ()=>{
+  await Clipboard.setStringAsync(copied.toString())
+  console.log(copied);
+  setunderline("none")
+  setunderlineAmp("none")
+  setunderlineKjv("none")
+  setunderlineMsg("none")
+  setHighlightNab("none")
+
+copied.splice(0,copied.length)
+
+
+ 
   }
 
   const lays = (event, index) => {
@@ -328,11 +528,11 @@ if(chaptering < numbers.length){
 
         </ScrollView>
 
+        <Button  title="copy" onPress={copy}></Button>
 
 <View  style={{ flexDirection:"row", justifyContent:"space-between",opacity:0.8, backgroundColor:"aquamarine",borderBottomWidth:0.03,borderColor:"red"}}>
 
-{/* <Button  title="left" onPress={leftnav}></Button>
-<Button title="right" onPress={rightnav}></Button> */}
+
 <Pressable onPress ={leftnav} style={{ width:"35%"}}><Text style={{ padding:6,fontSize:20,textAlign:"right"}}>{"<<<<"}</Text></Pressable>   
 <Pressable onPress={rightnav} style={{width:"35%"}}><Text style={{padding:6,fontSize:20,textAlign:"left"}}>{">>>>"}</Text></Pressable>   
 

@@ -18,6 +18,7 @@ import { About } from './SRC/Favorite';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import SettingsScreen from './SRC/settings';
 import { Favorite } from './SRC/Favorite';
+import HomeScreen from './SRC/testing';
 
 
 const Stack = createStackNavigator();
@@ -85,6 +86,7 @@ const StackNavigator =()=>{
    
     return (
         <>
+        {/* <HomeScreen/> */}
 <NavigationContainer>
 <DrawerNavigation/>
 </NavigationContainer>
