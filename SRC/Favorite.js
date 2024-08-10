@@ -2,6 +2,7 @@ import React from "react"
 import { View,Text, Image } from "react-native"
 import myImage from '../assets/dv.png.jpg'
 
+
 export function Favorite(){
 
 }

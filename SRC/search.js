@@ -180,8 +180,14 @@ setpasser(true)
 
 
 
-
-
+const passerChangerTimeuot = ()=>{
+  {
+    setTimeout(() => {
+        setpasser(false)
+  
+    }, 500)
+  }
+}
 
 
 
@@ -197,15 +203,10 @@ setpasser(true)
   return (
     <>
 
-   {passer == true &&  <SearchPasser navigation={navigation} name={bname} chapters={bchapter} verseOfScripture={bverse} verseOutline={verseOutline} numbers={9}  /> }
+   {passer == true &&  <SearchPasser navigation={navigation} name={bname} chapters={bchapter} verseOfScripture={bverse} verseOutline={verseOutline} numbers={"0"}  /> }
 
 
-{
-  setTimeout(() => {
-      {setpasser(false)} 
-
-  }, 500)
-}
+{passerChangerTimeuot}
 
   
    
@@ -217,7 +218,7 @@ setpasser(true)
             fontSize: 15,
             marginVertical: 9,
             borderColor: "white",
-            borderBottomWidth: 3,
+            borderBottomWidth: 3
           }}
         >
           {"Search Keyword" + ":" + " " + searches}
@@ -286,7 +287,7 @@ setpasser(true)
             sdisplayer.map((item, index) => {
               return (
                 <>
-                  {item && item.version == "[KJV]" && (
+                  { item.version == "[KJV]" && (
                     <Text
                       key={index}
                       onPress={()=> check(item) }

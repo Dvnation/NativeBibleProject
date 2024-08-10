@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Button, Alert, StyleSheet,Text, PanResponder } from 'react-native';
+import { SafeAreaView, View, Button, Alert, StyleSheet,Text, PanResponder, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Start } from './SRC/start';
@@ -34,7 +34,8 @@ const App = () => {
     }
 
     const DrawerNavigation = ()=>{
-        return(
+        return(<>
+            <StatusBar hidden ={true}/>
             <Drawer.Navigator initialRouteName="Home">
             
             <Drawer.Screen name="The Complete Bible" component={StackNavigator} options={({route})=>({
@@ -52,6 +53,7 @@ const App = () => {
 
           </Drawer.Navigator>
 
+          </>  
 
         )
     }  
