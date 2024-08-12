@@ -34,9 +34,10 @@ const App = () => {
     }
 
     const DrawerNavigation = ()=>{
-        return(<>
+        return(
+        <View style={{flex:1}}>
             <StatusBar hidden ={true}/>
-            <Drawer.Navigator initialRouteName="Home">
+            <Drawer.Navigator  initialRouteName="Home">
             
             <Drawer.Screen name="The Complete Bible" component={StackNavigator} options={({route})=>({
                     cardStyle : {backgroundColor:"blue"}, headerStyle:{backgroundColor:route.params?.backgroundColor || "antiquewhite"}
@@ -48,12 +49,13 @@ const App = () => {
                 <Drawer.Screen name='Devotionals' component={Devotionals}/>
                 <Drawer.Screen name='Join a community' component={Community}/>
                 <Drawer.Screen name='About' component={About}/>
+                {/* <Drawer.Screen name='test' component={HomeScreen}/> */}
 
 
 
           </Drawer.Navigator>
 
-          </>  
+          </View>  
 
         )
     }  

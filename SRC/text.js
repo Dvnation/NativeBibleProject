@@ -55,11 +55,8 @@ const {numbers} = route.params
   const [chaptering,setchaptering] = useState(chapter)
   const [searches,setseatch2] = useState("man")
   const [NABscan,setNabScan] = useState([])
-  const [underlineKjv,setunderlineKjv ] = useState("none")
-  const [underlineMsg,setunderlineMsg ] = useState("none")
-  const [underlineAmp,setunderlineAmp ] = useState("none")
-  const [underlineNab,setunderlineNab ] = useState("none")
-  const [underline,setunderline ] = useState("none")
+  
+  const [display,changedisplay] = useState(0)
 
 
 
@@ -73,6 +70,16 @@ const {numbers} = route.params
   useEffect(() => {
     setreg2(true);
   }, []);
+
+  useEffect(()=>{
+console.log(highlight.length+ "gone");
+if (highlight == "" && highlightAmp=="" && highlightKjv=="" && highlightMsg=="" && highlightNab=="") {
+changedisplay(0)
+}
+else{
+  console.log(highlight,highlightAmp,highlightKjv,highlightMsg,highlightNab);
+}
+  })
 
   const naval = useNavigation()
   useEffect(()=>{
@@ -88,6 +95,15 @@ useEffect(()=>{
   setNAB([...NAB,data]);
 
 },[])
+
+const UnderlineRef = useRef([])
+const UnderlineRefMsg = useRef([])
+const UnderlineRefKjv = useRef([])
+const UnderlineRefAmp = useRef([])
+const UnderlineRefNab = useRef([])
+
+
+
 
 
   const auto = () => {
@@ -160,8 +176,8 @@ useEffect(()=>{
           >
            <Pressable key={i} onPress={()=>handlePressNet(netScan[i],i)} >
            <Text
-              id={`play${i}`}
-              style={{textDecorationLine:highlight.includes(i)  ? underline: "nones", backgroundColor:"orange", paddingVertical: 3}}
+              id={`play${i}`} ref={(ref)=>UnderlineRef.current[i]= ref}
+              style={{backgroundColor:"orange", paddingVertical: 3}}
             >
               {i + 1 + " " + netScan[i] + " " + "[NET]"}
             </Text>
@@ -186,8 +202,8 @@ useEffect(()=>{
           >
              <Pressable key={i} onPress={()=>handlePressMsg(MSGscan[i],i)} >
            <Text
-              id={`play${i}`}
-              style={{textDecorationLine:highlightMsg.includes(i)  ? underlineMsg: "nones",backgroundColor: "blanchedalmond", paddingVertical: 3}}
+              id={`play${i}`}  ref={(ref)=>UnderlineRefMsg.current[i]= ref}
+              style={{backgroundColor: "blanchedalmond", paddingVertical: 3}}
             >
               {i + 1 + " " + MSGscan[i] + " " + "[MSG]"}
             </Text>
@@ -211,8 +227,8 @@ useEffect(()=>{
           >
               <Pressable key={i} onPress={()=>handlePressKjv(kjvScan[i],i)} >
            <Text
-              id={`play${i}`}
-              style={{textDecorationLine:highlightKjv.includes(i)  ? underlineKjv: "nones", backgroundColor:"pink", paddingVertical: 3}}
+              id={`play${i}`}   ref={(ref)=>(UnderlineRefKjv.current[i]= ref)}
+              style={{ backgroundColor:"pink", paddingVertical: 3}}
             >
               {i + 1 + " " + kjvScan[i] + " " + "[KJV]"}
             </Text>
@@ -235,8 +251,8 @@ useEffect(()=>{
           >
               <Pressable key={i}   onPress={()=>handlePressAmp(ampScan[i],i)} >
            <Text
-              id={`play${i}`}
-              style={{textDecorationLine:highlightAmp.includes(i)  ? underlineAmp: "nones", backgroundColor:"yellow", paddingVertical: 3}}
+              id={`play${i}`}    ref={(ref)=>UnderlineRefAmp.current[i]= ref}
+              style={{ backgroundColor:"yellow", paddingVertical: 3}}
             >
               {i + 1 + " " + ampScan[i] + " " + "[AMP]"}
             </Text>
@@ -261,8 +277,8 @@ useEffect(()=>{
             >
                 <Pressable delay key={i} onPress={()=>handlePressNab(NABscan[i],i)} >
            <Text
-              id={`play${i}`}
-              style={{textDecorationLine:highlightNab.includes(i)  ? underlineNab: "nones", backgroundColor:"aquamarine", paddingVertical: 3}}
+              id={`play${i}`}    ref={(ref)=>(UnderlineRefNab.current[i]= ref)}
+              style={{ backgroundColor:"aquamarine", paddingVertical: 3}}
             >
               {i + 1 + " " + NABscan[i] + " " + "[NAB]"}
             </Text>
@@ -281,7 +297,7 @@ useEffect(()=>{
 
     if(highlightMsg.includes(verse)){
       // alert("yes")
-      setunderlineMsg("none")
+      UnderlineRefMsg.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
       let man = highlightMsg.filter(item=>item!==verse)
       setHighlightMsg(man)
       
@@ -293,12 +309,11 @@ useEffect(()=>{
       
         if(!highlightMsg.includes(verse)){
       
-        // alert("no")
-      
+changedisplay(1)      
         setHighlightMsg([...highlightMsg,verse])
       
-      setunderlineMsg("underline")
-      copied.push(val+ " "+`[${verse+1}] [MSG]`)
+        UnderlineRefMsg.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
+        copied.push(val+ " "+`[${verse+1}] [MSG]`)
       
       
       }
@@ -314,7 +329,7 @@ useEffect(()=>{
 
     if(highlightAmp.includes(verse)){
       // alert("yes")
-      setunderlineAmp("none")
+      UnderlineRefAmp.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
       let man = highlight.filter(item=>item!==verse)
       setHighlightAmp(man)
       console.log(highlightAmp+"he");
@@ -327,12 +342,11 @@ useEffect(()=>{
       
         if(!highlightAmp.includes(verse)){
       
-        // alert("no")
-      
+changedisplay(1)      
         setHighlightAmp([...highlightAmp,verse])
       
-      setunderlineAmp("underline")
-      copied.push(val+ " "+`[${verse+1}] [AMP]`)
+        UnderlineRefAmp.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
+        copied.push(val+ " "+`[${verse+1}] [AMP]`)
       
       
       }
@@ -343,15 +357,14 @@ useEffect(()=>{
    
   }
   const handlePressKjv = (val,verse) =>{
-    // console.log(val);
+    
 
 
     if(highlightKjv.includes(verse)){
-      // alert("yes")
-      setunderlineKjv("none")
+      UnderlineRefKjv.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+
       let man = highlightKjv.filter(item=>item!==verse)
       setHighlightKjv(man)
-      console.log(highlightKjv+"he");
       
       let remove = copied.filter(item=>item!==verse)
       setcopied(remove)
@@ -360,12 +373,13 @@ useEffect(()=>{
       }
       
         if(!highlightKjv.includes(verse)){
-      
+          UnderlineRefKjv.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
+
         // alert("no")
+        changedisplay(1)
       
         setHighlightKjv([...highlightKjv,verse])
       
-      setunderlineKjv("underline")
       copied.push(val+ " "+`[${verse+1}] [KJV]`)
       
       
@@ -377,28 +391,31 @@ useEffect(()=>{
    
   }
   const handlePressNet = (val,verse) =>{
-    console.log(highlight+"she");
-console.log(verse);
+// UnderlineRef.current[verse].style.backgroundColor="red";
+
 if(highlight.includes(verse)){
-// alert("yes")
-setunderline("none")
+  UnderlineRef.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+
+// setunderline("none")
 let man = highlight.filter(item=>item!==verse)
 setHighlight(man)
-console.log(highlight+"he");
+console.log(highlight.length+"true");
 
 let remove = copied.filter(item=>item!==verse)
 setcopied(remove)
 let remove2 = copied.filter(item=>item!==val)
 setcopied(remove2)
+
 }
 
   if(!highlight.includes(verse)){
+    UnderlineRef.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
 
+changedisplay(1)
   // alert("no")
 
   setHighlight([...highlight,verse])
 
-setunderline("underline")
 copied.push(val+ " "+`[${verse+1}] [NET]`)
 
 
@@ -409,14 +426,12 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
   }
   const handlePressNab = (val,verse) =>{
     // console.log(val);
-
+    // display == 0? changedisplay(1): changedisplay(0)
 
     if(highlightNab.includes(verse)){
-      // alert("yes")
-      setunderlineNab("none")
+      UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
       let man = highlightNab.filter(item=>item!==verse)
       setHighlightNab(man)
-      console.log(highlightNab+"he");
       
       let remove = copied.filter(item=>item!==verse)
       setcopied(remove)
@@ -427,11 +442,12 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
         if(!highlightNab.includes(verse)){
       
         // alert("no")
-      
+        changedisplay(1)
+
         setHighlightNab([...highlightNab,verse])
       
-      setunderlineNab("underline")
-      copied.push(val+ " "+`[${verse+1}] [NAB]`)
+        UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
+        copied.push(val+ " "+`[${verse+1}] [NAB]`)
       
       
       }
@@ -443,6 +459,8 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
   }
 
   const copy =async ()=>{
+    changedisplay(0)
+
   await Clipboard.setStringAsync(copied.toString())
   console.log(copied);
   setunderline("none")
@@ -452,7 +470,6 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
   setHighlightNab("none")
 
 copied.splice(0,copied.length)
-
 
  
   }
@@ -528,7 +545,7 @@ if(chaptering < numbers.length){
 
         </ScrollView>
 
-        <Button  title="copy" onPress={copy}></Button>
+        {/* <Button  title="copy" onPress={copy}></Button> */}
 
 <View  style={{ flexDirection:"row", justifyContent:"space-between",opacity:0.8, backgroundColor:"aquamarine",borderBottomWidth:0.03,borderColor:"red"}}>
 
@@ -536,6 +553,17 @@ if(chaptering < numbers.length){
 <Pressable onPress ={leftnav} style={{ width:"35%"}}><Text style={{ padding:6,fontSize:20,textAlign:"right"}}>{"<<<<"}</Text></Pressable>   
 <Pressable onPress={rightnav} style={{width:"35%"}}><Text style={{padding:6,fontSize:20,textAlign:"left"}}>{">>>>"}</Text></Pressable>   
 
+</View>
+<View style={{backgroundColor:"whitesmoke", opacity:display, justifyContent:"center", right:1, position:"absolute", top:0, marginRight:5}}>
+<Text onPress={copy} style={{backgroundColor:"yellow", marginBottom:7,fontSize:20, borderWidth:2,borderColor:"black",textAlign:"center", borderRadius:5}}>COPY TEXT</Text>
+<Text style={{backgroundColor:"aquamarine",marginBottom:7,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center"}}>FAVORITE</Text>
+<Text style={{backgroundColor:"pink",marginBottom:7,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center"}}>LISTEN</Text>
+<Text style={{backgroundColor:"burlywood",marginBottom:4,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center", fontWeight:"light"}}>RECORD</Text>
+
+
+ 
+
+ 
 </View>
 
  </>

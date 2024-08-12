@@ -133,9 +133,9 @@ AsyncStorage.setItem('number', number)
 
   return (
     <>
-    <View>
+    {/* <View>
       
-    </View>
+    </View> */}
       <View style={styles.containerHeader}>
         <Text style={styles.font} onPress={bookClick}>BOOKS</Text>
         <Text style={styles.chapter}>CHAPTER</Text>

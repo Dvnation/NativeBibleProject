@@ -206,7 +206,7 @@ const passerChangerTimeuot = ()=>{
    {passer == true &&  <SearchPasser navigation={navigation} name={bname} chapters={bchapter} verseOfScripture={bverse} verseOutline={verseOutline} numbers={"0"}  /> }
 
 
-{passerChangerTimeuot}
+{passerChangerTimeuot()}
 
   
    
