@@ -10,6 +10,7 @@ import {
 import { PanResponder, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from 'expo-clipboard'
+import { AudioList } from "./Favorite";
 
 
 const {
@@ -58,6 +59,12 @@ const {numbers} = route.params
   
   const [display,changedisplay] = useState(0)
 
+const [MsgFav,setMsgFav]= useState("")
+const [NabFav,setNabFav]= useState("")
+const [NetFav,setNetFav]= useState("")
+const [AmpFav,setAmpFav]= useState("")
+const [KjvFav,setKjvFav]= useState("")
+
 
 
   const [highlight,setHighlight]= useState([])
@@ -66,18 +73,28 @@ const {numbers} = route.params
   const [highlightAmp,setHighlightAmp]= useState([])
   const [highlightMsg,setHighlightMsg]= useState([])
 
+  const [textDecorAmp,setDecorAmp] = useState("none")
+  const [textDecorKjv,setDecorKjv] = useState("none")
+  const [textDecorMsg,setDecorMsg] = useState("none")
+  const [textDecorNab,setDecorNab] = useState("none")
+  const [textDecorNet,setDecorNet] = useState("none")
 
+const [fvArr,setfv]= useState([])
   useEffect(() => {
     setreg2(true);
   }, []);
 
   useEffect(()=>{
-console.log(highlight.length+ "gone");
+  })
+
+  useEffect(()=>{
 if (highlight == "" && highlightAmp=="" && highlightKjv=="" && highlightMsg=="" && highlightNab=="") {
 changedisplay(0)
+
 }
 else{
-  console.log(highlight,highlightAmp,highlightKjv,highlightMsg,highlightNab);
+  console.log(highlight,highlightAmp,highlightKjv,highlightMsg,highlightNab +"hgjg");
+
 }
   })
 
@@ -293,11 +310,11 @@ const UnderlineRefNab = useRef([])
 
   const handlePressMsg = (val,verse) =>{
     // console.log(val);
-
+setMsgFav(val+"[MSG]")
 
     if(highlightMsg.includes(verse)){
-      // alert("yes")
-      UnderlineRefMsg.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+setDecorMsg("none")
+      UnderlineRefMsg.current[verse].setNativeProps({style:{textDecorationLine:textDecorMsg}})
       let man = highlightMsg.filter(item=>item!==verse)
       setHighlightMsg(man)
       
@@ -308,7 +325,6 @@ const UnderlineRefNab = useRef([])
       }
       
         if(!highlightMsg.includes(verse)){
-      
 changedisplay(1)      
         setHighlightMsg([...highlightMsg,verse])
       
@@ -325,11 +341,11 @@ changedisplay(1)
   }
   const handlePressAmp = (val,verse) =>{
     // console.log(val);
+    setMsgFav(val+"[AMP]")
 
 
     if(highlightAmp.includes(verse)){
-      // alert("yes")
-      UnderlineRefAmp.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRefAmp.current[verse].setNativeProps({style:{textDecorationLine:textDecorAmp}})
       let man = highlight.filter(item=>item!==verse)
       setHighlightAmp(man)
       console.log(highlightAmp+"he");
@@ -341,7 +357,8 @@ changedisplay(1)
       }
       
         if(!highlightAmp.includes(verse)){
-      
+          // setDecorAmp("underline")
+
 changedisplay(1)      
         setHighlightAmp([...highlightAmp,verse])
       
@@ -358,10 +375,14 @@ changedisplay(1)
   }
   const handlePressKjv = (val,verse) =>{
     
+    setMsgFav(val+"[KJV]")
 
 
     if(highlightKjv.includes(verse)){
+      // setDecorKjv("none")
+// 
       UnderlineRefKjv.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+
 
       let man = highlightKjv.filter(item=>item!==verse)
       setHighlightKjv(man)
@@ -373,6 +394,7 @@ changedisplay(1)
       }
       
         if(!highlightKjv.includes(verse)){
+
           UnderlineRefKjv.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
 
         // alert("no")
@@ -392,9 +414,11 @@ changedisplay(1)
   }
   const handlePressNet = (val,verse) =>{
 // UnderlineRef.current[verse].style.backgroundColor="red";
+setMsgFav(val+"[NET]")
 
 if(highlight.includes(verse)){
-  UnderlineRef.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+
+  UnderlineRef.current[verse].setNativeProps({style:{textDecorationLine:textDecorNet}})
 
 // setunderline("none")
 let man = highlight.filter(item=>item!==verse)
@@ -409,6 +433,7 @@ setcopied(remove2)
 }
 
   if(!highlight.includes(verse)){
+
     UnderlineRef.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
 
 changedisplay(1)
@@ -424,12 +449,14 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
 
    
   }
+  
   const handlePressNab = (val,verse) =>{
-    // console.log(val);
+
     // display == 0? changedisplay(1): changedisplay(0)
+    setMsgFav(val+"[NAB]")
 
     if(highlightNab.includes(verse)){
-      UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:textDecorNab}})
       let man = highlightNab.filter(item=>item!==verse)
       setHighlightNab(man)
       
@@ -439,14 +466,13 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
       setcopied(remove2)
       }
       
-        if(!highlightNab.includes(verse)){
-      
-        // alert("no")
-        changedisplay(1)
+        if(!highlightNab.includes(verse)|| highlight=="[]"){
+
+          changedisplay(1)
 
         setHighlightNab([...highlightNab,verse])
       
-        UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:"underline"}})
+        UnderlineRefNab.current[verse].setNativeProps({style:{textDecorationLine:"underline" }})
         copied.push(val+ " "+`[${verse+1}] [NAB]`)
       
       
@@ -459,17 +485,37 @@ copied.push(val+ " "+`[${verse+1}] [NET]`)
   }
 
   const copy =async ()=>{
+
+    MSGscan.map((item,index)=>{
+
+      // console.log(index + "john");
+      UnderlineRefMsg.current[index].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRefKjv.current[index].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRefNab.current[index].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRefAmp.current[index].setNativeProps({style:{textDecorationLine:"none"}})
+      UnderlineRef.current[index].setNativeProps({style:{textDecorationLine:"none"}})
+  
+  
+    })
+  
     changedisplay(0)
+    // setDecorNet("none")
+    // setDecorNab("none")
+  
+  
+  copied.splice(0,copied.length)
+  highlightAmp.splice(0,highlightAmp.length)
+  highlightNab.splice(0,highlightNab.length)
+  highlightKjv.splice(0,highlightKjv.length)
+  highlight.splice(0,highlight.length)
+  highlightMsg.splice(0,highlightMsg.length)
 
   await Clipboard.setStringAsync(copied.toString())
   console.log(copied);
-  setunderline("none")
-  setunderlineAmp("none")
-  setunderlineKjv("none")
-  setunderlineMsg("none")
-  setHighlightNab("none")
+  
+ 
 
-copied.splice(0,copied.length)
+
 
  
   }
@@ -521,6 +567,19 @@ if(chaptering < numbers.length){
    
 
   }
+
+
+  const addFav = ()=>{
+  //   fvArr.push(MsgFav)
+
+  // const book=[MsgFav]
+    navigation.navigate('Favorites',{ value:MsgFav,NabFav,AmpFav,NetFav,KjvFav})
+        // navigation.navigate('Audio List')
+
+  //  console.log(fvArr);
+  }
+
+  
   return (
     <>
     { navigation.navigate('The Complete Bible', {backgroundColor:"aquamarine"})
@@ -556,7 +615,7 @@ if(chaptering < numbers.length){
 </View>
 <View style={{backgroundColor:"whitesmoke", opacity:display, justifyContent:"center", right:1, position:"absolute", top:0, marginRight:5}}>
 <Text onPress={copy} style={{backgroundColor:"yellow", marginBottom:7,fontSize:20, borderWidth:2,borderColor:"black",textAlign:"center", borderRadius:5}}>COPY TEXT</Text>
-<Text style={{backgroundColor:"aquamarine",marginBottom:7,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center"}}>FAVORITE</Text>
+<Text onPress={addFav} style={{backgroundColor:"aquamarine",marginBottom:7,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center"}}>FAVORITE</Text>
 <Text style={{backgroundColor:"pink",marginBottom:7,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center"}}>LISTEN</Text>
 <Text style={{backgroundColor:"burlywood",marginBottom:4,fontSize:20,borderWidth:2,borderColor:"black", borderRadius:5,textAlign:"center", fontWeight:"light"}}>RECORD</Text>
 
@@ -565,6 +624,7 @@ if(chaptering < numbers.length){
 
  
 </View>
+
 
  </>
   );
